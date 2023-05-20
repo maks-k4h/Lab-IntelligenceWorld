@@ -1,0 +1,52 @@
+@model Operation
+
+@{
+    ViewData["Title"] = "Видалити";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Видалити</h1>
+
+<h3>Підтвердження Дії</h3>
+<div>
+    <h4>Операція</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Status)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Status)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        @if (ViewBag.CanDelete == null || ViewBag.CanDelete)
+        {
+            <input type="submit" value="Видалити" class="btn btn-danger" />
+        }
+        else
+        {
+            <span style="color: red">Дана операція має залежності</span>
+        }
+        |
+        <a asp-action="Index">До переліку</a>
+    </form>
+</div>
