@@ -52,7 +52,6 @@ namespace Lab2_IntelligenceAgencies.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Country country)
         {
-            Console.WriteLine(country.Id.ToString() + ":" + country.Name);
             try
             {
                 _connection.Open();
