@@ -61,7 +61,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
                 return NotFound();
             }
         }
@@ -106,7 +106,8 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 _connection.Open();
                 var command = _connection.CreateCommand();
                 command.CommandText =
-                    $"INSERT INTO AccessLevels (CountryId, Name, Description) VALUES ({accessLevel.CountryId}, '{accessLevel.Name}', '{accessLevel.Description}');";
+                    $"INSERT INTO AccessLevels (CountryId, Name, Description) " +
+                    $"VALUES ({accessLevel.CountryId}, \"{accessLevel.Name}\", \"{accessLevel.Description}\");";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
                 
@@ -173,8 +174,8 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 _connection.Open();
                 var command = _connection.CreateCommand();
                 command.CommandText = $"UPDATE AccessLevels SET " +
-                                      $"Name = '{accessLevel.Name}', " +
-                                      $"Description = '{accessLevel.Description}', " +
+                                      $"Name = \"{accessLevel.Name}\", " +
+                                      $"Description = \"{accessLevel.Description}\", " +
                                       $"CountryId = {accessLevel.CountryId} " +
                                       $"WHERE Id = {accessLevel.Id};";
                 if (command.ExecuteNonQuery() == 0)

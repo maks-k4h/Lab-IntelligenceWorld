@@ -57,7 +57,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 _connection.Open();
 
                 var command = _connection.CreateCommand();
-                command.CommandText = $"INSERT INTO Countries (Name) VALUES ('{country.Name}');";
+                command.CommandText = $"INSERT INTO Countries (Name) VALUES (\"{country.Name}\");";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -104,7 +104,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"UPDATE Countries SET Name = '{country.Name}' WHERE Id = {country.Id};";
+                command.CommandText = $"UPDATE Countries SET Name = \"{country.Name}\" WHERE Id = {country.Id};";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -169,11 +169,10 @@ namespace Lab2_IntelligenceAgencies.Controllers
             _connection.Open();
             var command = _connection.CreateCommand();
             command.CommandText =
-                $"SELECT COUNT(*) FROM Countries WHERE LOWER(Countries.Name) = '{name.ToLower().Trim()}';";
+                $"SELECT COUNT(*) FROM Countries WHERE LOWER(Countries.Name) = \"{name.ToLower().Trim()}\";";
             var count = command.ExecuteScalar() as Int64?;
             if (count == null)
                 return Json("Не вдається перевірити валідність.");
-            Console.WriteLine(count);
             if (count > 0)
                 return Json("Назва повинна бути унікальною.");
             return Json(true);

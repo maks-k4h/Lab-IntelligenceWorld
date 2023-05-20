@@ -11,8 +11,8 @@ public class Country
 
     [Display(Name = "Назва")]
     [MinLength(2, ErrorMessage = "Назва надто коротка")]
-    
     [Remote("CheckName", "Countries")]
+    [RegularExpression(Constants.TextFieldPattern, ErrorMessage = Constants.TextFieldPatternErrorMessage)]
     public string Name { get; set; } = null!;
 }
 

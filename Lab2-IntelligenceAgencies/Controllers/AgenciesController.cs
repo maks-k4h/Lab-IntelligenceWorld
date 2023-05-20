@@ -61,7 +61,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
 
                 var command = _connection.CreateCommand();
                 command.CommandText = $"INSERT INTO Agencies (Name, Headquarters, Description) " +
-                                      $"VALUES ('{agency.Name}', '{agency.Headquarters}', '{agency.Description}');";
+                                      $"VALUES (\"{agency.Name}\", \"{agency.Headquarters}\", \"{agency.Description}\");";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 

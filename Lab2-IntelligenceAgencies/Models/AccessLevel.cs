@@ -12,11 +12,14 @@ public class AccessLevel
     public int CountryId { get; set; }
     
     [Display(Name = "Назва")]
+    [RegularExpression(Constants.TextFieldPattern, ErrorMessage = Constants.TextFieldPatternErrorMessage)]
     public string Name { get; set; } = null!;
     
     [Display(Name = "Опис")]
+    [RegularExpression(Constants.TextFieldPattern, ErrorMessage = Constants.TextFieldPatternErrorMessage)]
     public string? Description { get; set; }
 
     [Display(Name = "Країна")]
+    [RegularExpression(Constants.TextFieldPattern, ErrorMessage = Constants.TextFieldPatternErrorMessage)]
     public Country? Country { get; set; } = null;
 }
