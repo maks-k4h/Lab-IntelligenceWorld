@@ -1,0 +1,48 @@
+@model IEnumerable<AgencyWorker>
+
+@{
+    ViewData["Title"] = "Співробітники";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Додати</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var worker in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => worker.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => worker.FullName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@worker.Id">Редагувати</a> |
+                <a asp-action="Delete" asp-route-id="@worker.Id">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>

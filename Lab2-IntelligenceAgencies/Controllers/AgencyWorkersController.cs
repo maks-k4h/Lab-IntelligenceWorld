@@ -10,16 +10,16 @@ using MySql.Data.MySqlClient;
 
 namespace Lab2_IntelligenceAgencies.Controllers
 {
-    public class CountriesController : Controller
+    public class AgencyWorkersController : Controller
     {
         private MySqlConnection _connection;
 
-        public CountriesController(MySqlConnection connection)
+        public AgencyWorkersController(MySqlConnection connection)
         {
             _connection = connection;
         }
         
-        // GET: Countries
+        // GET: AgencyWorkers
         public ActionResult Index()
         {
             _connection.Open();
@@ -27,36 +27,36 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 return NotFound();
 
             var command = _connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Countries";
+            command.CommandText = "SELECT * FROM AgencyWorkers";
 
             using var reader = command.ExecuteReader();
-            var res = new List<Country>();
+            var res = new List<AgencyWorker>();
             
             while (reader.Read())
             {
-                res.Add(new Country{Id = (int)reader["Id"], Name = (string)reader["Name"]});
+                res.Add(new AgencyWorker{Id = (int)reader["Id"], FullName = (string)reader["FullName"]});
             }
 
             return View(res);
         }
 
-        // GET: Countries/Create
+        // GET: AgencyWorkers/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Countries/Create
+        // POST: AgencyWorkers/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Country country)
+        public ActionResult Create(AgencyWorker worker)
         {
             try
             {
                 _connection.Open();
 
                 var command = _connection.CreateCommand();
-                command.CommandText = $"INSERT INTO Countries (Name) VALUES (\"{country.Name}\");";
+                command.CommandText = $"INSERT INTO AgencyWorkers (FullName) VALUES (\"{worker.FullName}\");";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -68,24 +68,24 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: Countries/Edit/5
+        // GET: AgencyWorkers/Edit/5
         public ActionResult Edit(int id)
         {
             try
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"SELECT Countries.Name FROM Countries WHERE Id = {id};";
+                command.CommandText = $"SELECT AgencyWorkers.FullName FROM AgencyWorkers WHERE Id = {id};";
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
                     throw new Exception();
 
-                var country = new Country
+                var worker = new AgencyWorker
                 {
                     Id = id,
-                    Name = (string)reader["Name"]
+                    FullName = (string)reader["FullName"]
                 };
-                return View(country);
+                return View(worker);
             }
             catch (Exception e)
             {
@@ -94,19 +94,19 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: Countries/Edit/5
+        // POST: AgencyWorkers/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Country country)
+        public ActionResult Edit(int id, AgencyWorker worker)
         {
             try
             {
-                if (id != country.Id)
+                if (id != worker.Id)
                     throw new Exception();
                 
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"UPDATE Countries SET Name = \"{country.Name}\" WHERE Id = {country.Id};";
+                command.CommandText = $"UPDATE AgencyWorkers SET FullName = \"{worker.FullName}\" WHERE Id = {worker.Id};";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -118,24 +118,24 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: Countries/Delete/5
+        // GET: AgencyWorkers/Delete/5
         public ActionResult Delete(int id)
         {
             try
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"SELECT Countries.Name FROM Countries WHERE Id = {id};";
+                command.CommandText = $"SELECT AgencyWorkers.FullName FROM AgencyWorkers WHERE Id = {id};";
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
                     throw new Exception();
 
-                var country = new Country
+                var worker = new AgencyWorker
                 {
                     Id = id,
-                    Name = (string)reader["Name"]
+                    FullName = (string)reader["FullName"]
                 };
-                return View(country);
+                return View(worker);
             }
             catch (Exception e)
             {
@@ -144,7 +144,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: Countries/Delete/5
+        // POST: AgencyWorkers/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -152,7 +152,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             try
             {
                 _connection.Open();
-                var command = new MySqlCommand($"DELETE FROM Countries WHERE Id = {id}", _connection);
+                var command = new MySqlCommand($"DELETE FROM AgencyWorkers WHERE Id = {id}", _connection);
 
                 var res = command.ExecuteNonQuery();
                 if (res == 0)
@@ -164,20 +164,6 @@ namespace Lab2_IntelligenceAgencies.Controllers
             {
                 return View();
             }
-        }
-
-        public JsonResult CheckName(string name)
-        {
-            _connection.Open();
-            var command = _connection.CreateCommand();
-            command.CommandText =
-                $"SELECT COUNT(*) FROM Countries WHERE LOWER(Countries.Name) = \"{name.ToLower().Trim()}\";";
-            var count = command.ExecuteScalar() as Int64?;
-            if (count == null)
-                return Json("Не вдається перевірити валідність.");
-            if (count > 0)
-                return Json("Назва повинна бути унікальною.");
-            return Json(true);
         }
     }
 }
