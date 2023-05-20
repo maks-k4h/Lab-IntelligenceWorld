@@ -10,16 +10,16 @@ using MySql.Data.MySqlClient;
 
 namespace Lab2_IntelligenceAgencies.Controllers
 {
-    public class CountriesController : Controller
+    public class AgenciesController : Controller
     {
         private MySqlConnection _connection;
 
-        public CountriesController(MySqlConnection connection)
+        public AgenciesController(MySqlConnection connection)
         {
             _connection = connection;
         }
         
-        // GET: Countries
+        // GET: Agencies
         public ActionResult Index()
         {
             _connection.Open();
@@ -27,37 +27,41 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 return NotFound();
 
             var command = _connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Countries";
+            command.CommandText = "SELECT * FROM Agencies";
 
             using var reader = command.ExecuteReader();
-            var res = new List<Country>();
+            var res = new List<Agency>();
             
             while (reader.Read())
-            {
-                
-                res.Add(new Country{Id = (int)reader["Id"], Name = (string)reader["Name"]});
-            }
+                res.Add(new Agency
+                {
+                    Id = (int)reader["Id"], 
+                    Name = (string)reader["Name"],
+                    Headquarters = (string?)reader["Headquarters"],
+                    Description = (string?)reader["Description"]
+                });
 
             return View(res);
         }
 
-        // GET: Countries/Create
+        // GET: Agencies/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Countries/Create
+        // POST: Agencies/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Country country)
+        public ActionResult Create(Agency agency)
         {
             try
             {
                 _connection.Open();
 
                 var command = _connection.CreateCommand();
-                command.CommandText = $"INSERT INTO Countries (Name) VALUES ('{country.Name}');";
+                command.CommandText = $"INSERT INTO Agencies (Name, Headquarters, Description) " +
+                                      $"VALUES ('{agency.Name}', '{agency.Headquarters}', '{agency.Description}');";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -69,24 +73,26 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: Countries/Edit/5
+        // GET: Agencies/Edit/5
         public ActionResult Edit(int id)
         {
             try
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"SELECT Countries.Name FROM Countries WHERE Id = {id};";
+                command.CommandText = $"SELECT * FROM Agencies WHERE Id = {id};";
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
                     throw new Exception();
 
-                var country = new Country
+                var agency = new Agency
                 {
                     Id = id,
-                    Name = (string)reader["Name"]
+                    Name = (string)reader["Name"],
+                    Headquarters = (string?)reader["Headquarters"],
+                    Description = (string?)reader["Description"]
                 };
-                return View(country);
+                return View(agency);
             }
             catch (Exception e)
             {
@@ -95,45 +101,52 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: Countries/Edit/5
+        // POST: Agencies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Country country)
+        public ActionResult Edit(int id, Agency agency)
         {
             try
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"UPDATE Countries SET Name = '{country.Name}' WHERE Id = {country.Id};";
+                command.CommandText = $"UPDATE Agencies SET " +
+                                      $"Name = \"{agency.Name}\"," +
+                                      $"Headquarters = \"{agency.Headquarters}\"," +
+                                      $"Description = \"{agency.Description}\" " +
+                                      $"WHERE Id = {agency.Id};";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return View();
             }
         }
 
-        // GET: Countries/Delete/5
+        // GET: Agencies/Delete/5
         public ActionResult Delete(int id)
         {
             try
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"SELECT Countries.Name FROM Countries WHERE Id = {id};";
+                command.CommandText = $"SELECT * FROM Agencies WHERE Id = {id};";
                 var reader = command.ExecuteReader();
                 if (!reader.Read())
                     throw new Exception();
 
-                var country = new Country
+                var agency = new Agency
                 {
                     Id = id,
-                    Name = (string)reader["Name"]
+                    Name = (string)reader["Name"],
+                    Headquarters = (string?)reader["Headquarters"],
+                    Description = (string?)reader["Description"]
                 };
-                return View(country);
+                return View(agency);
             }
             catch (Exception e)
             {
@@ -142,7 +155,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: Countries/Delete/5
+        // POST: Agencies/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -150,7 +163,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             try
             {
                 _connection.Open();
-                var command = new MySqlCommand($"DELETE FROM Countries WHERE Id = {id}", _connection);
+                var command = new MySqlCommand($"DELETE FROM Agencies WHERE Id = {id}", _connection);
 
                 var res = command.ExecuteNonQuery();
                 if (res == 0)
@@ -162,21 +175,6 @@ namespace Lab2_IntelligenceAgencies.Controllers
             {
                 return View();
             }
-        }
-
-        public JsonResult CheckName(string name)
-        {
-            _connection.Open();
-            var command = _connection.CreateCommand();
-            command.CommandText =
-                $"SELECT COUNT(*) FROM Countries WHERE LOWER(Countries.Name) = '{name.ToLower().Trim()}';";
-            var count = command.ExecuteScalar() as Int64?;
-            if (count == null)
-                return Json("Не вдається перевірити валідність.");
-            Console.WriteLine(count);
-            if (count > 0)
-                return Json("Назва повинна бути унікальною.");
-            return Json(true);
         }
     }
 }
