@@ -1,0 +1,48 @@
+@model IEnumerable<Country>
+
+@{
+    ViewData["Title"] = "Країни";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Країни</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Створити нову</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var country in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => country.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => country.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@country.Id">Редагувати</a> |
+                <a asp-action="Delete" asp-route-id="@country.Id">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>
