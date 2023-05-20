@@ -1,0 +1,60 @@
+@model OperationCommander
+
+@{
+    ViewData["Title"] = "Видалити";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Підтвердження Дії</h3>
+<div>
+    <h4>Командир операцією</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Id)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AgencyWorker)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AgencyWorker.FullName)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OperationId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OperationId)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Operation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Operation.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        @if (ViewBag.CanDelete == null || ViewBag.CanDelete)
+        {
+            <input type="submit" value="Видалити" class="btn btn-danger" />
+        }
+        else
+        {
+            <span style="color: red">Даний командир викоритстовується</span>
+        }
+        |
+        <a asp-action="Index">До переліку</a>
+    </form>
+</div>

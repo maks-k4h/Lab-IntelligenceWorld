@@ -18,6 +18,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
         {
             _connection = connection;
         }
+        
         // GET: Operations
         public ActionResult Index()
         {
