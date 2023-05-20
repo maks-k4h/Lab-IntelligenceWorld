@@ -1,21 +1,25 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Lab2_IntelligenceAgencies.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MySql.Data.MySqlClient;
 
 namespace Lab2_IntelligenceAgencies.Controllers
 {
-    public class AccessLevelsController : Controller
+    public class DepartmentsController : Controller
     {
         private MySqlConnection _connection;
 
-        public AccessLevelsController(MySqlConnection connection)
+        public DepartmentsController(MySqlConnection connection)
         {
             _connection = connection;
         }
         
-        
-        // GET: AccessLevels
+        // GET: Departments
         public ActionResult Index()
         {
             try
@@ -23,19 +27,18 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 _connection.Open();
 
                 var command = _connection.CreateCommand();
-                command.CommandText = "SELECT * FROM AccessLevels";
+                command.CommandText = "SELECT * FROM Departments";
 
                 using var reader = command.ExecuteReader();
-                var res = new List<AccessLevel>();
+                var res = new List<Department>();
 
                 while (reader.Read())
                 {
-                    var a = new AccessLevel
+                    var a = new Department()
                     {
                         Id = (int)reader["Id"],
-                        CountryId = (int)reader["CountryId"],
+                        AgencyId = (int)reader["AgencyId"],
                         Name = (string)reader["Name"],
-                        Description = (string)reader["Description"]
                     };
                     
                     res.Add(a);
@@ -43,13 +46,13 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 
                 reader.Close();
         
-                foreach (var al in res)
+                foreach (var dep in res)
                 {
                     command = _connection.CreateCommand();
-                    command.CommandText = $"SELECT * From Countries WHERE Countries.Id = {al.CountryId};";
+                    command.CommandText = $"SELECT Id, Name From Agencies WHERE Id = {dep.AgencyId};";
                     var cReader = command.ExecuteReader();
                     cReader.Read();
-                    al.Country = new Country
+                    dep.Agency = new Agency()
                     {
                         Id = (int)cReader["Id"],
                         Name = (string)cReader["Name"]
@@ -66,26 +69,27 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: AccessLevels/Create
+        // GET: Departments/Create
         public ActionResult Create()
         {
             try
             {
+                // retrieve agencies
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Countries;";
+                command.CommandText = "SELECT * FROM Agencies;";
                 var reader = command.ExecuteReader();
-                var countries = new List<Country>();
+                var agencies = new List<Agency>();
                 while (reader.Read())
                 {
-                    countries.Add(new Country
+                    agencies.Add(new Agency
                     {
                         Id = (int)reader["Id"],
                         Name = (string)reader["Name"]
                     });
                 }
 
-                ViewBag.CountriesId = new SelectList(countries, "Id", "Name");
+                ViewBag.AgencyId = new SelectList(agencies, "Id", "Name");
                 
                 return View();
             }
@@ -96,18 +100,18 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: AccessLevels/Create
+        // POST: Departments/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(AccessLevel accessLevel)
+        public ActionResult Create(Department department)
         {
             try
             {
                 _connection.Open();
                 var command = _connection.CreateCommand();
                 command.CommandText =
-                    $"INSERT INTO AccessLevels (CountryId, Name, Description) " +
-                    $"VALUES ({accessLevel.CountryId}, \"{accessLevel.Name}\", \"{accessLevel.Description}\");";
+                    $"INSERT INTO Departments (AgencyId, Name) " +
+                    $"VALUES ({department.AgencyId}, \"{department.Name}\");";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
                 
@@ -119,43 +123,42 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: AccessLevels/Edit/5
+        // GET: Departments/Edit/5
         public ActionResult Edit(int id)
         {
             try
             {
-                // retrieve access level
+                // retrieve department
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"SELECT * FROM AccessLevels WHERE Id = {id}";
+                command.CommandText = $"SELECT * FROM Departments WHERE Id = {id}";
                 var reader = command.ExecuteReader();
                 reader.Read();
-                var accessLevel = new AccessLevel
+                var department = new Department
                 {
                     Id = (int)reader["Id"],
-                    CountryId = (int)reader["CountryId"],
+                    AgencyId = (int)reader["AgencyId"],
                     Name = (string)reader["Name"],
-                    Description = (string)reader["Description"]
                 };
                 reader.Close();
                 
-                // retrieve all countries
+                // retrieve all agencies
                 command = _connection.CreateCommand();
-                command.CommandText = "SELECT * FROM Countries;";
+                command.CommandText = "SELECT * FROM Agencies;";
                 reader = command.ExecuteReader();
-                var countries = new List<Country>();
+                var agencies = new List<Agency>();
                 while (reader.Read())
                 {
-                    countries.Add(new Country
+                    agencies.Add(new Agency()
                     {
                         Id = (int)reader["Id"],
                         Name = (string)reader["Name"]
                     });
                 }
 
-                ViewBag.CountriesId = new SelectList(countries, "Id", "Name");
+                ViewBag.AgencyId = new SelectList(agencies, "Id", "Name");
                 
-                return View(accessLevel);
+                return View(department);
             }
             catch (Exception e)
             {
@@ -164,23 +167,22 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: AccessLevels/Edit/5
+        // POST: Departments/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, AccessLevel accessLevel)
+        public ActionResult Edit(int id, Department department)
         {
             try
             {
-                if (id != accessLevel.Id)
+                if (id != department.Id)
                     throw new Exception();
                 
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"UPDATE AccessLevels SET " +
-                                      $"Name = \"{accessLevel.Name}\", " +
-                                      $"Description = \"{accessLevel.Description}\", " +
-                                      $"CountryId = {accessLevel.CountryId} " +
-                                      $"WHERE Id = {accessLevel.Id};";
+                command.CommandText = $"UPDATE Departments SET " +
+                                      $"Name = \"{department.Name}\", " +
+                                      $"AgencyId = {department.AgencyId} " +
+                                      $"WHERE Id = {department.Id};";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -192,38 +194,37 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: AccessLevels/Delete/5
+        // GET: Departments/Delete/5
         public ActionResult Delete(int id)
         {
             try
             {
-                // retrieve access level
+                // retrieve the department
                 _connection.Open();
                 var command = _connection.CreateCommand();
-                command.CommandText = $"SELECT * FROM AccessLevels WHERE Id = {id}";
+                command.CommandText = $"SELECT * FROM Departments WHERE Id = {id}";
                 var reader = command.ExecuteReader();
                 reader.Read();
-                var accessLevel = new AccessLevel
+                var department = new Department
                 {
                     Id = (int)reader["Id"],
-                    CountryId = (int)reader["CountryId"],
-                    Name = (string)reader["Name"],
-                    Description = (string)reader["Description"]
+                    AgencyId = (int)reader["AgencyId"],
+                    Name = (string)reader["Name"]
                 };
                 reader.Close();
                 
-                // retrieve the country
+                // retrieve department's agency
                 command = _connection.CreateCommand();
-                command.CommandText = $"SELECT * FROM Countries WHERE Id = {accessLevel.CountryId};";
+                command.CommandText = $"SELECT Id, Name FROM Agencies WHERE Id = {department.AgencyId};";
                 reader = command.ExecuteReader();
                 reader.Read();
-                accessLevel.Country = new Country
+                department.Agency = new Agency
                 {
                     Id = (int)reader["Id"],
                     Name = (string)reader["Name"]
                 };
                 
-                return View(accessLevel);
+                return View(department);
             }
             catch (Exception e)
             {
@@ -232,7 +233,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: AccessLevels/Delete/5
+        // POST: Departments/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -240,7 +241,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             try
             {
                 _connection.Open();
-                var command = new MySqlCommand($"DELETE FROM AccessLevels WHERE Id = {id}", _connection);
+                var command = new MySqlCommand($"DELETE FROM Departments WHERE Id = {id}", _connection);
 
                 var res = command.ExecuteNonQuery();
                 if (res == 0)

@@ -102,6 +102,9 @@ namespace Lab2_IntelligenceAgencies.Controllers
         {
             try
             {
+                if (id != country.Id)
+                    throw new Exception();
+                
                 _connection.Open();
                 var command = _connection.CreateCommand();
                 command.CommandText = $"UPDATE Countries SET Name = \"{country.Name}\" WHERE Id = {country.Id};";

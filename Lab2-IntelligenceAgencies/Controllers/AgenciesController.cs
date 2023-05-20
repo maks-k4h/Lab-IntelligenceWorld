@@ -108,6 +108,9 @@ namespace Lab2_IntelligenceAgencies.Controllers
         {
             try
             {
+                if (id != agency.Id)
+                    throw new Exception();
+                
                 _connection.Open();
                 var command = _connection.CreateCommand();
                 command.CommandText = $"UPDATE Agencies SET " +
