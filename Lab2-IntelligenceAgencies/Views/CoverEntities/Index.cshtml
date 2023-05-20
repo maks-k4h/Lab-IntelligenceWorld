@@ -1,0 +1,54 @@
+@model IEnumerable<CoverEntity>
+
+@{
+    ViewData["Title"] = "Персонажі";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Додати</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Legend)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var cover in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => cover.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => cover.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => cover.Legend)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@cover.Id">Редагувати</a> |
+                <a asp-action="Delete" asp-route-id="@cover.Id">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>

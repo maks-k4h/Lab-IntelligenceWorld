@@ -1,0 +1,44 @@
+@model CoverEntity
+
+@{
+    ViewData["Title"] = "Видалити";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Видалити</h1>
+
+<h3>Підтвердження Дії</h3>
+<div>
+    <h4>Персонаж</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Legend)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Legend)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        @if (ViewBag.CanDelete == null || ViewBag.CanDelete)
+        {
+            <input type="submit" value="Видалити" class="btn btn-danger" />
+        }
+        else
+        {
+            <span style="color: red">Даний персонаж викоритстовується</span>
+        }
+        |
+        <a asp-action="Index">До переліку</a>
+    </form>
+</div>
