@@ -11,45 +11,45 @@ using MySql.Data.MySqlClient;
 
 namespace Lab2_IntelligenceAgencies.Controllers
 {
-    public class OperationCommandersController : Controller
+    public class DepartmentHeadsController : Controller
     {
         private MySqlConnection _connection;
 
-        public OperationCommandersController(MySqlConnection connection)
+        public DepartmentHeadsController (MySqlConnection connection)
         {
             _connection = connection;
         }
         
-        // GET: OperationCommanders
+        // GET: DepartmentHeads
         public ActionResult Index()
         {
             _connection.Open();
             if (_connection.State != ConnectionState.Open)
                 return NotFound();
 
-            // retrieve operations
+            // retrieve department heads
             var command = _connection.CreateCommand();
-            command.CommandText = "SELECT * FROM OperationCommanders";
+            command.CommandText = "SELECT * FROM DepartmentHeads";
             using var reader = command.ExecuteReader();
-            var res = new List<OperationCommander>();
+            var res = new List<DepartmentHead>();
             while (reader.Read())
             {
-                res.Add(new OperationCommander
+                res.Add(new DepartmentHead
                 {
                     Id = (int)reader["Id"], 
-                    OperationId = (int)reader["OperationId"]
+                    DepartmentId = (int)reader["DepartmentId"]
                 });
             }
             reader.Close();
             
             // retrieve agency workers
-            foreach (var commander in res)
+            foreach (var head in res)
             {
                 command = _connection.CreateCommand();
-                command.CommandText = $"SELECT * FROM AgencyWorkers WHERE Id = {commander.Id}";
+                command.CommandText = $"SELECT * FROM AgencyWorkers WHERE Id = {head.Id}";
                 var r = command.ExecuteReader();
                 r.Read();
-                commander.AgencyWorker = new AgencyWorker
+                head.AgencyWorker = new AgencyWorker
                 {
                     Id = (int)r["Id"],
                     FullName = (string)r["FullName"]
@@ -57,14 +57,14 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 r.Close();
             }
             
-            // retrieve operation
+            // retrieve departments
             foreach (var commander in res)
             {
                 command = _connection.CreateCommand();
-                command.CommandText = $"SELECT * FROM Operations WHERE Id = {commander.OperationId}";
+                command.CommandText = $"SELECT * FROM Departments WHERE Id = {commander.DepartmentId}";
                 var r = command.ExecuteReader();
                 r.Read();
-                commander.Operation = new Operation
+                commander.Department = new Department
                 {
                     Id = (int)r["Id"],
                     Name = (string)r["Name"]
@@ -75,7 +75,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             return View(res);
         }
 
-        // GET: OperationCommanders/Create
+        // GET: DepartmentHeads/Create
         public ActionResult Create()
         {
             try
@@ -98,44 +98,42 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 ViewBag.AgencyWorkers = new SelectList(workers, "Id", "FullName");
                 workersReader.Close();
                 
-                // retrieve operations
-                var getOperationsCommand = _connection.CreateCommand();
-                getOperationsCommand.CommandText = "SELECT * FROM Operations";
-                var operationsReader = getOperationsCommand.ExecuteReader();
-                var operations = new List<Operation>();
-                while (operationsReader.Read())
+                // retrieve departments
+                var getDepartmentsCommand = _connection.CreateCommand();
+                getDepartmentsCommand.CommandText = "SELECT * FROM Departments";
+                var departmentsReader = getDepartmentsCommand.ExecuteReader();
+                var departments = new List<Department>();
+                while (departmentsReader.Read())
                 {
-                    operations.Add(new Operation
+                    departments.Add(new Department
                     {
-                        Id = (int)operationsReader["Id"],
-                        Name = (string)operationsReader["Name"],
-                        Status = (string)operationsReader["Status"],
-                        Description = (string?)operationsReader["Description"]
+                        Id = (int)departmentsReader["Id"],
+                        Name = (string)departmentsReader["Name"],
                     });
                 }
-                ViewBag.Operations = new SelectList(operations, "Id", "Name");
-                operationsReader.Close();
+                ViewBag.Departments = new SelectList(departments, "Id", "Name");
+                departmentsReader.Close();
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
             }
-            
+
             return View();
         }
 
-        // POST: OperationCommanders/Create
+        // POST: DepartmentHeads/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(OperationCommander commander)
+        public ActionResult Create(DepartmentHead head)
         {
             try
             {
                 _connection.Open();
 
                 var command = _connection.CreateCommand();
-                command.CommandText = $"INSERT INTO OperationCommanders (Id, OperationId) " +
-                                      $"VALUES ({commander.Id}, {commander.OperationId});";
+                command.CommandText = $"INSERT INTO DepartmentHeads (Id, DepartmentId) " +
+                                      $"VALUES ({head.Id}, {head.DepartmentId});";
                 if (command.ExecuteNonQuery() == 0)
                     throw new Exception();
 
@@ -148,52 +146,50 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // GET: OperationCommanders/Delete/5
+        // GET: DepartmentHeads/Delete/5
         public ActionResult Delete(int id)
         {
             try
             {
                 _connection.Open();
                 
-                // retrieve operation commander
-                var getCommanderCommand = _connection.CreateCommand();
-                getCommanderCommand.CommandText = $"SELECT * FROM OperationCommanders WHERE Id = {id};";
-                var commanderReader = getCommanderCommand.ExecuteReader();
-                commanderReader.Read();
-                var commander = new OperationCommander
+                // retrieve department head
+                var getHeadCommand = _connection.CreateCommand();
+                getHeadCommand.CommandText = $"SELECT * FROM DepartmentHeads WHERE Id = {id};";
+                var headReader = getHeadCommand.ExecuteReader();
+                headReader.Read();
+                var head = new DepartmentHead
                 {
                     Id = id,
-                    OperationId = (int)commanderReader["OperationId"]
+                    DepartmentId = (int)headReader["DepartmentId"]
                 };
-                commanderReader.Close();
+                headReader.Close();
                 
                 // retrieve agency worker
                 var getAgencyWorkerCommand = _connection.CreateCommand();
-                getAgencyWorkerCommand.CommandText = $"SELECT * FROM AgencyWorkers WHERE Id = {commander.Id}";
+                getAgencyWorkerCommand.CommandText = $"SELECT * FROM AgencyWorkers WHERE Id = {head.Id}";
                 var workerReader = getAgencyWorkerCommand.ExecuteReader();
                 workerReader.Read();
-                commander.AgencyWorker = new AgencyWorker
+                head.AgencyWorker = new AgencyWorker
                 {
-                    Id = commander.Id,
+                    Id = head.Id,
                     FullName = (string)workerReader["FullName"]
                 };
                 workerReader.Close();
                 
-                // retrieve operation
-                var getOperationCommand = _connection.CreateCommand();
-                getOperationCommand.CommandText = $"SELECT * FROM Operations WHERE Id = {commander.OperationId}";
-                var operationReader = getOperationCommand.ExecuteReader();
-                operationReader.Read();
-                commander.Operation = new Operation
+                // retrieve department
+                var getDepartmentCommand = _connection.CreateCommand();
+                getDepartmentCommand.CommandText = $"SELECT * FROM Departments WHERE Id = {head.DepartmentId}";
+                var departmentReader = getDepartmentCommand.ExecuteReader();
+                departmentReader.Read();
+                head.Department = new Department
                 {
-                    Id = commander.OperationId,
-                    Name = (string)operationReader["Name"],
-                    Status = (string)operationReader["Status"],
-                    Description = (string?)operationReader["Description"]
+                    Id = head.DepartmentId,
+                    Name = (string)departmentReader["Name"],
                 };
-                operationReader.Close();
+                departmentReader.Close();
 
-                return View(commander);
+                return View(head);
             }
             catch (Exception e)
             {
@@ -202,7 +198,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
         }
 
-        // POST: OperationCommanders/Delete/5
+        // POST: DepartmentHeads/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
@@ -210,7 +206,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             try
             {
                 _connection.Open();
-                var command = new MySqlCommand($"DELETE FROM OperationCommanders WHERE Id = {id}", _connection);
+                var command = new MySqlCommand($"DELETE FROM DepartmentHeads WHERE Id = {id}", _connection);
 
                 var res = command.ExecuteNonQuery();
                 if (res == 0)
@@ -229,26 +225,26 @@ namespace Lab2_IntelligenceAgencies.Controllers
             _connection.Open();
             var command = _connection.CreateCommand();
             command.CommandText =
-                $"SELECT COUNT(*) FROM OperationCommanders WHERE Id = {id};";
+                $"SELECT COUNT(*) FROM DepartmentHeads WHERE Id = {id};";
             var count = command.ExecuteScalar() as Int64?;
             if (count == null)
                 return Json("Не вдається перевірити валідність.");
             if (count > 0)
-                return Json("Даний співробітник уже є командиром операції.");
+                return Json("Даний співробітник уже є головою департаменту.");
             return Json(true);
         }
 
-        public JsonResult CheckOperationId(int operationId)
+        public JsonResult CheckDepartmentId(int departmentId)
         {
             _connection.Open();
             var command = _connection.CreateCommand();
             command.CommandText =
-                $"SELECT COUNT(*) FROM OperationCommanders WHERE OperationId = {operationId};";
+                $"SELECT COUNT(*) FROM DepartmentHeads WHERE DepartmentId = {departmentId};";
             var count = command.ExecuteScalar() as Int64?;
             if (count == null)
                 return Json("Не вдається перевірити валідність.");
             if (count > 0)
-                return Json("Дана операція уже має командира.");
+                return Json("Даний департамент уже має головнокомандувача.");
             return Json(true);
         }
     }
