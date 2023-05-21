@@ -1,0 +1,60 @@
+@model AgentIntelligenceActivity
+
+@{
+    ViewData["Title"] = "Додати Розвідкову Діяльінсть Агента";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<br/>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="@Model.Agent" class="control-label"></label>
+                <select asp-for="AgentId" asp-items="ViewBag.Agents" class="form-control" value="@ViewBag.AgentId"></select>
+                <span asp-validation-for="AgentId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="@Model.Operation" class="control-label"></label>
+                <select asp-for="OperationId" class="form-control" asp-items="ViewBag.Operations" value="@ViewBag.OperationId"></select>
+                <span asp-validation-for="OperationId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="@Model.CoverEntity" class="control-label"></label>
+                <select asp-for="CoverEntityId" class="form-control" asp-items="ViewBag.CoverEntities" value="@ViewBag.CoverEntityId"></select>
+                <span asp-validation-for="CoverEntityId" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="@Model.Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control" value="@ViewBag.Description"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <br/>
+            
+            <div class="form-group">
+                <p class="text-danger">@ViewBag.ErrorMessage</p>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Створити" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<br>
+<div>
+    <a asp-action="Index">До переліку.</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

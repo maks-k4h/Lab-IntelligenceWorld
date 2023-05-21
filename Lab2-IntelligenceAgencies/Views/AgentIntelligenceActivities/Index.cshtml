@@ -1,0 +1,61 @@
+@model IEnumerable<AgentIntelligenceActivity>
+
+@{
+    ViewData["Title"] = "Розвідкова Активність Агентів";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Створити запис</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Agent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CoverEntity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var v in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => v.AgencyWorker.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.CoverEntity.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.Operation.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@v.Id">Редагувати</a>
+                |
+                <a asp-action="Delete" asp-route-id="@v.Id">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>
