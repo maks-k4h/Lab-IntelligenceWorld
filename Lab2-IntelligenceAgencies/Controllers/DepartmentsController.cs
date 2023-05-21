@@ -119,7 +119,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Create");
             }
         }
 
@@ -190,7 +190,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Edit");
             }
         }
 
@@ -251,7 +251,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Delete");
             }
         }
     }

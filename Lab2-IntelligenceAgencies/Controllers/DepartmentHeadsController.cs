@@ -216,7 +216,7 @@ namespace Lab2_IntelligenceAgencies.Controllers
             }
             catch
             {
-                return View();
+                return RedirectToAction("Delete");
             }
         }
 
