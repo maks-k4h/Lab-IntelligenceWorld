@@ -1,0 +1,55 @@
+@model IEnumerable<StationaryWorkerToOperation>
+
+@{
+    ViewData["Title"] = "Стаціонарні співробітники в операціях";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Створити запис</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StationaryWorker)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AccessLevel)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var v in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => v.Operation.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.AgencyWorker.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.AccessLevel.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-stationaryWorkerId="@v.StationaryWorkerId" asp-route-operationId="@v.OperationId">Редагувати</a>
+                |
+                <a asp-action="Delete" asp-route-stationaryWorkerId="@v.StationaryWorkerId" asp-route-operationId="@v.OperationId">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>
