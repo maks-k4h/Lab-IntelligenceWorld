@@ -1,0 +1,47 @@
+@model IEnumerable<Agent>
+
+@{
+    ViewData["Title"] = "Агенти";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Створити нового</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AgencyWorker.FullName)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var access in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => access.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => access.AgencyWorker.FullName)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@access.Id">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>

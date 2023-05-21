@@ -17,6 +17,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <AdditionalFiles Include="Views\Agents\Create.cshtml" />
+      <AdditionalFiles Include="Views\Agents\Delete.cshtml" />
+      <AdditionalFiles Include="Views\Agents\Edit.cshtml" />
+      <AdditionalFiles Include="Views\Agents\Index.cshtml" />
       <AdditionalFiles Include="Views\StationaryWorkers\Create.cshtml" />
       <AdditionalFiles Include="Views\StationaryWorkers\Delete.cshtml" />
       <AdditionalFiles Include="Views\StationaryWorkers\Index.cshtml" />
