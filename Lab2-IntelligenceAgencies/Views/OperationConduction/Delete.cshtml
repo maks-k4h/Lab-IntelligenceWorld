@@ -1,0 +1,79 @@
+@model OperationConduction
+
+@{
+    ViewData["Title"] = "Видалити";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Підтвердження Дії</h3>
+<div>
+    <h4>Проведення Операції</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CountryId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.CountryId)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Country)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Country.Name)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.AgencyId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.AgencyId)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Agency)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Agency.Name)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.OperationId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.OperationId)
+        </dd>
+    </dl>
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Operation)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Operation.Name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="CountryId" />
+        <input type="hidden" asp-for="AgencyId" />
+        <input type="hidden" asp-for="OperationId" />
+        
+        @if (ViewBag.CanDelete == null || ViewBag.CanDelete)
+        {
+            <input type="submit" value="Видалити" class="btn btn-danger" />
+        }
+        else
+        {
+            <span style="color: red">Даний запис використовується</span>
+        }
+        |
+        <a asp-action="Index">До переліку</a>
+    </form>
+</div>

@@ -29,4 +29,11 @@
       <AdditionalFiles Include="Views\StationaryWorkers\Index.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Views\AccessLevels\AgentIntelligenceActivities\Create.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AccessLevels\AgentIntelligenceActivities\Delete.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AccessLevels\AgentIntelligenceActivities\Edit.cshtml" />
+      <_ContentIncludedByDefault Remove="Views\AccessLevels\AgentIntelligenceActivities\Index.cshtml" />
+    </ItemGroup>
+
 </Project>

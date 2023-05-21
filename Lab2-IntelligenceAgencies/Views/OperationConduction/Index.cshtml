@@ -1,0 +1,53 @@
+@model IEnumerable<OperationConduction>
+
+@{
+    ViewData["Title"] = "Розвідкова Активність Агентів";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<ul class="nav nav-pills">
+    <li class="nav-item">
+        <a class="nav-link" asp-action="Create">Створити запис</a>
+    </li>
+</ul>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Country)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Agency)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Operation)
+            </th>
+            <th></th>
+        </tr>
+    </thread>
+    <tbody>
+    
+    @foreach (var v in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => v.Country.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.Agency.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(item => v.Operation.Name)
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-countryId="@v.CountryId" asp-route-agencyId="@v.AgencyId" asp-route-operationId="@v.OperationId">Видалити</a>
+            </td>
+        </tr>
+    }
+    
+    </tbody>
+    
+</table>
