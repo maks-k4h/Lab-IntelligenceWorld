@@ -1,7 +1,7 @@
-@model Operation
+@model AgencyWorker
 
 @{
-    ViewBag.Title = "Запит А1";
+    ViewBag.Title = "Запит B2";
     Layout = "_Layout";
 }
 
@@ -9,30 +9,28 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="A1" method="get">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="B2" method="get">
+            <div class="text-danger"></div>
             
             <div class="form-group">
-                <p>Ідентифікатори та повні імена співробітників, що є агентами, які беруть участь в операції ...</p>
+                <p>Ідентифікатори та повні імена стаціонарних співробітників, що користуються принаймі всіма тими рівнями доступу, що й співробітник агенції ...</p>
             </div>
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <select asp-for="Id" asp-items="ViewBag.Operations" class="form-control" rows="3"></select>
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <select asp-for="Id" asp-items="ViewBag.AgencyWorkers" class="form-control"></select>
+                <p class="text-danger">@ViewBag.ErrorMessage</p>
             </div>
-            
+
             <br/>
-            
+
             <div class="form-group">
-                <input type="submit" value="Виконати" class="btn btn-primary" />
+                <input type="submit" value="Виконати" class="btn btn-primary"/>
             </div>
             
             <br/>
         </form>
     </div>
 </div>
-
 
 <table class="table">
     <thread>
@@ -46,8 +44,8 @@
         </tr>
     </thread>
     <tbody>
-    
-    @foreach (AgencyWorker worker in ViewBag.AgencyWorkers)
+
+    @foreach (AgencyWorker worker in ViewBag.StationaryWorkers)
     {
         <tr>
             <td>
@@ -59,7 +57,9 @@
         </tr>
     }
     
+
     </tbody>
+
 </table>
 
 

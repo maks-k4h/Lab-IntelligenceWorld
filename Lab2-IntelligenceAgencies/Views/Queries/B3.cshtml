@@ -1,7 +1,7 @@
 @model Operation
 
 @{
-    ViewBag.Title = "Запит А1";
+    ViewBag.Title = "Запит B3";
     Layout = "_Layout";
 }
 
@@ -9,11 +9,11 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="A1" method="get">
+        <form asp-action="B3" method="get">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             
             <div class="form-group">
-                <p>Ідентифікатори та повні імена співробітників, що є агентами, які беруть участь в операції ...</p>
+                <p>Ідентифікатори та назви агенцій розвідки, які співпрацюють принаймі з усіма тими державами, що залучені до операції ...</p>
             </div>
 
             <div class="form-group">
@@ -38,23 +38,23 @@
     <thread>
         <tr>
             <th>
-                @Html.DisplayNameFor(_ => new AgencyWorker().Id)
+                @Html.DisplayNameFor(_ => new Agency().Id)
             </th>
             <th>
-                @Html.DisplayNameFor(_ => new AgencyWorker().FullName)
+                @Html.DisplayNameFor(_ => new Agency().Name)
             </th>
         </tr>
     </thread>
     <tbody>
     
-    @foreach (AgencyWorker worker in ViewBag.AgencyWorkers)
+    @foreach (Agency agency in ViewBag.Agencies)
     {
         <tr>
             <td>
-                @Html.DisplayFor(item => worker.Id)
+                @Html.DisplayFor(item => agency.Id)
             </td>
             <td>
-                @Html.DisplayFor(item => worker.FullName)
+                @Html.DisplayFor(item => agency.Name)
             </td>
         </tr>
     }

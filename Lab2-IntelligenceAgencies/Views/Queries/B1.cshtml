@@ -1,7 +1,7 @@
-@model Operation
+@model IEnumerable<Tuple<AgencyWorker, AgencyWorker>>
 
 @{
-    ViewBag.Title = "Запит А1";
+    ViewBag.Title = "Запит B1";
     Layout = "_Layout";
 }
 
@@ -9,30 +9,31 @@
 
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="A1" method="get">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="B1" method="get">
+            <div class="text-danger"></div>
             
             <div class="form-group">
-                <p>Ідентифікатори та повні імена співробітників, що є агентами, які беруть участь в операції ...</p>
+                <p>Ідентифікатори та імена пар співробітників,
+                   що є агентами,
+                   множини операцій, в яких вони беруть участь, рівні
+                   з потужностями не менше ...</p>
             </div>
 
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <select asp-for="Id" asp-items="ViewBag.Operations" class="form-control" rows="3"></select>
-                <span asp-validation-for="Id" class="text-danger"></span>
+                <input name="param" class="form-control" value="@ViewBag.Num"/>
+                <p class="text-danger">@ViewBag.ErrorMessage</p>
             </div>
             
             <br/>
-            
+
             <div class="form-group">
-                <input type="submit" value="Виконати" class="btn btn-primary" />
+                <input type="submit" value="Виконати" class="btn btn-primary"/>
             </div>
             
             <br/>
         </form>
     </div>
 </div>
-
 
 <table class="table">
     <thread>
@@ -43,24 +44,38 @@
             <th>
                 @Html.DisplayNameFor(_ => new AgencyWorker().FullName)
             </th>
+            <th>
+                @Html.DisplayNameFor(_ => new AgencyWorker().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(_ => new AgencyWorker().FullName)
+            </th>
         </tr>
     </thread>
     <tbody>
-    
-    @foreach (AgencyWorker worker in ViewBag.AgencyWorkers)
+
+    @foreach (var tuple in Model)
     {
         <tr>
             <td>
-                @Html.DisplayFor(item => worker.Id)
+                @Html.DisplayFor(item => tuple.Item1.Id)
             </td>
             <td>
-                @Html.DisplayFor(item => worker.FullName)
+                @Html.DisplayFor(item => tuple.Item1.FullName)
+            </td>
+            <td>
+                @Html.DisplayFor(item => tuple.Item2.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => tuple.Item2.FullName)
             </td>
         </tr>
     }
-    
+
     </tbody>
+
 </table>
+
 
 
 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
