@@ -1,0 +1,79 @@
+@model Country
+
+@{
+    ViewBag.Title = "Запит А4";
+    Layout = "_Layout";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="A4" method="get">
+            <div class="text-danger"></div>
+            
+            <div class="form-group">
+                <p>Ідентифікатори та повні імена персонажів, що використовуються в операціях, які проводяться з країною ...</p>
+            </div>
+
+            <div class="form-group">
+                <select asp-for="Id" asp-items="ViewBag.Countries" class="form-control"></select>
+                <p class="text-danger">@ViewBag.ErrorMessage</p>
+            </div>
+
+            <br/>
+
+            <div class="form-group">
+                <input type="submit" value="Виконати" class="btn btn-primary"/>
+            </div>
+            
+            <br/>
+        </form>
+    </div>
+</div>
+
+<table class="table">
+    <thread>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(_ => new CoverEntity().Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(_ => new CoverEntity().FullName)
+            </th>
+        </tr>
+    </thread>
+    <tbody>
+
+    @foreach (CoverEntity agency in ViewBag.CoverEntities)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(item => agency.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(item => agency.FullName)
+            </td>
+        </tr>
+    }
+    
+
+    </tbody>
+
+</table>
+
+
+<div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+  <div class="btn-group me-2" role="group" aria-label="First group">
+    <a asp-action="Index" asp-route-query="A1" type="button" class="btn btn-secondary">A1</a>
+    <a asp-action="Index" asp-route-query="A2" type="button" class="btn btn-secondary">A2</a>
+    <a asp-action="Index" asp-route-query="A3" type="button" class="btn btn-secondary">A3</a>
+    <a asp-action="Index" asp-route-query="A4" type="button" class="btn btn-secondary">A4</a>
+    <a asp-action="Index" asp-route-query="A5" type="button" class="btn btn-secondary">A5</a>
+  </div>
+  <div class="btn-group me-2" role="group" aria-label="Second group">
+    <a asp-action="Index" asp-route-query="B1" type="button" class="btn btn-secondary">B1</a>
+    <a asp-action="Index" asp-route-query="B2" type="button" class="btn btn-secondary">B2</a>
+    <a asp-action="Index" asp-route-query="B3" type="button" class="btn btn-secondary">B3</a>
+  </div>
+</div>
