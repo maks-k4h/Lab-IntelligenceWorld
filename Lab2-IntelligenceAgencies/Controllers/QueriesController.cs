@@ -356,7 +356,8 @@ namespace Lab2_IntelligenceAgencies.Controllers
                 var getAgencyWorkersCommand = new MySqlCommand(
                     "SELECT W1.Id, W1.FullName, W2.Id, W2.FullName " +
                     "FROM AgencyWorkers W1, AgencyWorkers W2 " +
-                    "WHERE W1.Id IN (" +
+                    "WHERE W1.Id < W2.Id " +
+                    "AND W1.Id IN (" +
                     "   SELECT Id" +
                     "   FROM Agents" +
                     "   ) " +
